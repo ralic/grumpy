@@ -2,14 +2,14 @@
 The :mod:`lexer` module concerns itself with tokenizing Python source.
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
+
 from . import source, diagnostic
 import re
 import unicodedata
 import sys
 
 if sys.version_info[0] == 3:
-    unichr = chr
+    chr = chr
     byte = lambda x: bytes([x])
 else:
     byte = chr
@@ -328,7 +328,7 @@ class Lexer:
         if sys.version_info > (3,) or not match.group(13):
             int_type = int
         else:
-            int_type = long
+            int_type = int
 
         if match.group(5) is not None: # floating point or complex literal
             if match.group(6) is None:
@@ -481,14 +481,14 @@ class Lexer:
                 elif chr == "v":
                     chunks.append("\v")
             elif match.group(2) is not None: # oct
-                chunks.append(unichr(int(match.group(2), 8)))
+                chunks.append(chr(int(match.group(2), 8)))
             elif match.group(3) is not None: # hex
-                chunks.append(unichr(int(match.group(3), 16)))
+                chunks.append(chr(int(match.group(3), 16)))
             elif match.group(4) is not None: # unicode-16
-                chunks.append(unichr(int(match.group(4), 16)))
+                chunks.append(chr(int(match.group(4), 16)))
             elif match.group(5) is not None: # unicode-32
                 try:
-                    chunks.append(unichr(int(match.group(5), 16)))
+                    chunks.append(chr(int(match.group(5), 16)))
                 except ValueError:
                     error = diagnostic.Diagnostic(
                         "error", "unicode character out of range", {},
@@ -608,4 +608,4 @@ class Lexer:
         return self
 
     def __next__(self):
-        return self.next()
+        return next(self)
